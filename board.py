@@ -1,7 +1,6 @@
 class Cell:
-    # (nat, nat)
+    # tuple(nat, nat)
     def __init__(self, pos):
-        # add assertion here
         self.row = pos[0]
         self.col = pos[1]
         self.state = '_'  # one of ('_','X','O')
@@ -31,6 +30,7 @@ class Cell:
 
 
 class Board:
+    # nat nat
     def __init__(self, size=3, cells_to_win=3):
         self.size = size
         self.cells_to_win = cells_to_win
@@ -48,19 +48,16 @@ class Board:
             for j in range(self.size):
                 self.board[i][j].clear_cell()
 
-    def change_cell(self, r, c, x_turn):  # might change params
-        assert r >= 0
-        assert c >= 0
-        assert r < self.size
-        assert c < self.size
+    def change_cell(self, r, c, x_turn):
+        if 0 <= r and 0 <= c and r < self.size and c < self.size:
+            raise ValueError()
         return self.board[r][c].update_cell(x_turn)
 
-    def has_won(self, x_turn):
+    def has_won(self, x_turn):  # checks if X (if x_turn == True) has won, (O if x_turn == False)
         if x_turn:
             target = 'X'
         else:
             target = 'O'
-
         for r in range(self.size):
             for c in range(self.size):
                 if self.board[r][c].get_state() == target:
@@ -93,14 +90,13 @@ class Board:
                     if won:
                         return True
 
-    # returns the cell state ('_', 'X', 'O') or returns '' if input is invalid
+    # returns the cell state ('_', 'X', 'O')
     def get_cell_state(self, r, c):
         if 0 <= r and 0 <= c and r < self.size and c < self.size:
-            return self.board[r][c].get_state()
-        else:
-            return ''
+            raise ValueError()
+        return self.board[r][c].get_state()
 
-    def is_full(self):
+    def is_full(self):  # returns True if the board has no cell '_' and False otherwise
         for r in range(self.size):
             for c in range(self.size):
                 if self.board[r][c].get_state() == '_':

@@ -1,5 +1,4 @@
 from board import Board
-# from text_display import TextDisplay
 from graphics_display import GraphicDisplay
 import pygame
 pygame.init()
@@ -18,7 +17,6 @@ font = pygame.font.SysFont("Roboto-Regular", 48)
 
 x_turn = True
 game = Board()  # default: size = 3, moves to win = 3
-# td = TextDisplay(game)
 gd = GraphicDisplay(screen_size, game, font)
 gd.display_grid()
 display_standard_message(x_turn)
@@ -31,60 +29,28 @@ while not done:
         if event.type == pygame.QUIT:
             done = True
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if game_end:
+            if game_end:  # click to clear board when game is done
                 game.clear()
                 gd.clear_display()
                 game_end = False
                 display_standard_message(x_turn)
             else:
-                try:
+                try:  # check if click is within region of board
                     cell = gd.pos_to_cell(pygame.mouse.get_pos())
-                except TypeError:
+                except ValueError:
                     pass
                 else:
-                    print(cell)
-                    if game.change_cell(cell[0], cell[1], x_turn):
+                    if game.change_cell(cell[0], cell[1], x_turn):  # false if cell is not empty
                         x_turn = not x_turn
                         gd.display_cell(cell[0], cell[1])
                         if game.has_won(not x_turn):
                             if x_turn:
-                                print("O wins")
                                 gd.display_header("O Wins")
                             else:
-                                print("X wins")
                                 gd.display_header("X wins")
                             game_end = True
                         elif game.is_full():
-                            print("Draw")
                             gd.display_header("Draw")
                             game_end = True
                         else:
                             display_standard_message(x_turn)
-
-    # replace this with GUI
-    # if x_turn:
-    #    prompt = "X's turn:"
-    # else:
-    #  prompt = "O's turn:"
-    # cmd = input(prompt)
-    # if cmd == "move":
-    #    r = int(input("row: "))
-    #    c = int(input("col: "))
-    #    if game.change_cell(r, c, x_turn):
-    #        x_turn = not x_turn
-    #    if game.has_won(not x_turn):
-    #        if x_turn:
-    #            print("O wins")
-    #        else:
-    #            print("X wins")
-    #        game.clear()
-    #   td.display_board()
-
-    # elif cmd == "clear":
-    #    game.clear()
-    #    td.display_board()
-
-    # elif cmd == "quit":
-    #    done = True
-    # else:
-    #    print("invalid command")
